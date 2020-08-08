@@ -818,6 +818,7 @@
     {
       "alpha_2": "KR",
       "alpha_3": "KOR",
+	  "common_name": "south korea",
       "name": "Korea, Republic of",
       "numeric": "410"
     },
