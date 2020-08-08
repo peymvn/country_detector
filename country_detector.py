@@ -1,8 +1,9 @@
 import json
+import re
 
 def country_detector(text):
 
-  with open('Countries.json') as json_file:
+  with open('/content/country_detector/Countries.json') as json_file:
     country_dict = json.load(json_file)
 
   country_list = []
@@ -17,8 +18,9 @@ def country_detector(text):
         pass
 
     try:
-      # country alpha_2 (US, IR, ...) 
-      if country['alpha_2'] in text: # do not make the text lower to avoid misunderestanding of ALPHA 2 code with some words (like: us)
+      # country alpha_2 (US, IR, ...)
+      m = re.findall('\\b' + country['alpha_2'] + '\\b', text)
+      if bool(m): # do not make the text lower to avoid misunderestanding of ALPHA 2 code with some words (like: us)
         if not country['alpha_3'] in country_list: # if this country is not already detected
           country_list.append(country['alpha_3'])
     except:
@@ -26,7 +28,8 @@ def country_detector(text):
 
     try:
       # country alpha_3 (USA, IRI, ...) 
-      if country['alpha_3'] in text: # do not make the text lower to avoid misunderestanding of ALPHA 2 code with some words (like: us)
+      m = re.findall('\\b' + country['alpha_3'] + '\\b', text)
+      if bool(m): # do not make the text lower to avoid misunderestanding of ALPHA 3 code with some words (like: us)
         if not country['alpha_3'] in country_list: # if this country is not already detected
           country_list.append(country['alpha_3'])
     except:
@@ -50,10 +53,11 @@ def country_detector(text):
 
       
     try:
-      # country other_names name
-      if any(c for c in country['other_names'].lower().split() in text.lower()):
-        if not country['alpha_3'] in country_list: # if this country is not already detected
-          country_list.append(country['alpha_3'])
+      # country other_names ||| other_names contains splitted single words representing one probable form of that country
+      for c in country['other_names'].lower().split():
+        if c in text.lower():
+          if not country['alpha_3'] in country_list: # if this country is not already detected
+            country_list.append(country['alpha_3'])
     except:
       pass
 
