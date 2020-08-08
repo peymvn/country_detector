@@ -2,7 +2,7 @@ import json
 
 def country_detector(text):
 
-  with open('/content/country_detector/Countries.json') as json_file:
+  with open('Countries.json') as json_file:
     country_dict = json.load(json_file)
 
   country_list = []
